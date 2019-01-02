@@ -1,5 +1,6 @@
-from setuptools import find_packages, setup
 import sys
+
+from setuptools import find_packages, setup
 
 if sys.version_info[0] == 3:
     dev_reqs = 'deps/dev-requirements.txt'
@@ -31,7 +32,7 @@ SETUP_REQUIREMENTS = [
 setup(
     name='schireson-logger',
     url='https://bitbucket.org/schireson/schireson-logger',
-    version='1.0.0',
+    version='1.0.1',
     packages=find_packages(where='src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,

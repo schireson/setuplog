@@ -1,4 +1,5 @@
 import logging
+
 import pytest
 
 from schireson_logger import log_exceptions, setup_logging
