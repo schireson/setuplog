@@ -17,20 +17,16 @@
 ### How to configure local logging
 For logging in one script, set up logging and get the logger, then start using it:
 ```python
-import logging
-from schireson_logger.logger import setup_logging
+from schireson_logger import log, setup_logging
 
-setup_logging('INFO', log_file='script.log', logger_name='script_logger')
-log = logging.getLogger('service_logger')
+setup_logging('INFO', log_file='script.log')
 log.info('Wow!')
 ```
 
 To capture tracebacks and exception information, add the `log_exceptions` decorator to the function and pass it the logger:
 ```python
-import logging
-from schireson_logger.decorator import log_exceptions
+from schireson_logger import log, log_exceptions
 
-log = logging.getLogger('service_logger')
 @log_exceptions(log)
 def function():
     ...
@@ -39,16 +35,15 @@ This decorator will log any exception from this function, even within nested fun
 
 To configure logging for an entire service, entrypoints (e.g. `manage.py`) should first set up logging:
 ```python
-from schireson_logger.logger import setup_logging
+from schireson_logger import setup_logging
 
-setup_logging('INFO', log_file='service.log', logger_name='service_logger')
+setup_logging('INFO', log_file='service.log')
 ```
 
-Then modules that want to log things can get the logger based on the given name and start logging:
+Then modules that want to log things can import the logger and start logging:
 ```python
-import logging
+from schireson_logger import log
 
-log = logging.getLogger('service_logger')
 log.info('Wow!')
 ```
 

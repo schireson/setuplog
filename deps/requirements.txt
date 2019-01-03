@@ -4,3 +4,4 @@
 #
 #    pip-compile --output-file deps/requirements.txt deps/requirements.in
 #
+jsonschema==2.6.0

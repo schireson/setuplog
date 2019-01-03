@@ -6,6 +6,7 @@
 #
 attrs==18.2.0             # via pytest
 bandit==1.4.0
+bumpversion==0.5.3
 certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
 click==7.0                # via flask
@@ -16,6 +17,7 @@ enum34==1.1.6             # via flake8
 flake8==3.5.0
 flask==0.12.2
 funcsigs==1.0.2           # via mock, pytest
+functools32==3.2.3.post2
 futures==3.2.0            # via isort
 gitdb2==2.0.5             # via gitpython
 gitpython==2.1.11         # via bandit
@@ -23,6 +25,7 @@ idna==2.8                 # via requests
 isort==4.3.3
 itsdangerous==1.1.0       # via flask
 jinja2==2.10              # via flask
+jsonschema==2.6.0
 markupsafe==1.1.0         # via jinja2
 mccabe==0.6.1             # via flake8
 mock==2.0.0 ; python_version < "3.3"
