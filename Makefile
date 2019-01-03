@@ -23,6 +23,9 @@ sync-deps:
 build:
 	python setup.py sdist bdist_wheel
 
+publish:
+	lucha cicd publish pypi
+
 test:
 	pytest -m "not functional"
 
