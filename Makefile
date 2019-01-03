@@ -15,6 +15,7 @@ install-deps:
 
 lint:
 	bin/lint
+	bin/diffcheck
 
 sync-deps:
 	bin/sync-deps
@@ -35,3 +36,11 @@ clean:
 
 	rm -f junit_results.xml .coverage
 	rm -rf build dist coverage .mypy_cache .eggs
+
+bump:
+	# For an arbitrary or additive change.
+	bumpversion patch
+
+bump-minor:
+	# For a backwards incompatible change.
+	bumpversion minor

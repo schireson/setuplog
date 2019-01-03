@@ -1,4 +1,5 @@
 bandit==1.4.0
+bumpversion~=0.5
 coverage==4.5
 flask==0.12.2
 flake8==3.5.0
