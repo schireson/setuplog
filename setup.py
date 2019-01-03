@@ -32,7 +32,7 @@ SETUP_REQUIREMENTS = [
 setup(
     name='schireson-logger',
     url='https://bitbucket.org/schireson/schireson-logger',
-    version='1.0.1',
+    version='1.0.2',
     packages=find_packages(where='src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,

@@ -1,6 +1,12 @@
 ######################################
 # Reusable steps should be added here.
 ######################################
+authenticate-aws: &authenticate-aws
+  run:
+    name: Authenticate with a particular ECR instance on AWS
+    command: |
+      aws configure set default.region "${AWS_DEFAULT_REGION:-us-east-1}"
+      printf "${AWS_CREDENTIALS}" > ~/.aws/credentials
 install-dependencies: &install-dependencies
   run:
     name: Install Dependencies
@@ -31,6 +37,12 @@ test: &test
       cd "${LOCATION:-.}"
       . .venv/bin/activate
       make test
+publish: &publish
+  run:
+    name: Publish Python distribution to Artifactory
+    command: |
+      sudo pip3 install twine
+      lucha aws whitelist --profile artifactory -- make -C "${LOCATION:-.}" publish
 
 ###########
 # Workflows
@@ -43,6 +55,15 @@ workflows:
     jobs:
       - build
       - build-py2
+
+      - publish:
+          requires:
+            - build
+            - build-py2
+          filters:
+            branches:
+              only:
+                - /^master$/
 
 ###################
 # Job Definitions
@@ -79,3 +100,11 @@ jobs:
           key: dep-{{ checksum "deps/dev-requirements-py2.txt" }}-{{ checksum "deps/requirements-py2.txt" }}
       - setup_remote_docker
       - <<: *test
+
+  publish:
+    docker:
+      - image: schireson/cicd-python
+    steps:
+      - checkout
+      - <<: *authenticate-aws
+      - <<: *publish
