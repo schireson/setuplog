@@ -4,3 +4,5 @@
 #
 #    pip-compile --output-file deps/requirements-py2.txt deps/requirements.in
 #
+functools32==3.2.3.post2  # via jsonschema
+jsonschema==2.6.0

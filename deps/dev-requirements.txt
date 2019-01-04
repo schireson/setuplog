@@ -19,6 +19,7 @@ idna==2.8                 # via requests
 isort==4.3.3
 itsdangerous==1.1.0       # via flask
 jinja2==2.10              # via flask
+jsonschema==2.6.0
 markupsafe==1.1.0         # via jinja2
 mccabe==0.6.1             # via flake8
 mypy==0.570 ; python_version > "2.7"
