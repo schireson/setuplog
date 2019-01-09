@@ -73,10 +73,10 @@ def setup_logging(
         date_format=None,
         log_level_overrides=None,
 ):
-    """Set up logging.
+    """Set up logging for a file or a project.
 
-    The param log_level_overrides is a mapping of loggers to levels, to set levels for dependent packages.
-    e.g. {'requests': 'INFO'}
+    The param log_level_overrides is a mapping of loggers to levels, to set levels for dependent packages,
+    e.g. ``{'requests': 'INFO'}``
     """
     logging_config['handlers']['main']['level'] = log_level
 

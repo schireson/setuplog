@@ -7,7 +7,7 @@ from schireson_logger import log_exceptions, setup_logging
 
 def log_levels(logger):
     logger.info('')
-    logger.warn('')
+    logger.warning('')
     logger.error('')
 
 

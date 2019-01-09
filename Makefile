@@ -38,7 +38,7 @@ clean:
 	rm -rf `find . -type f -name "*.pyo"`
 
 	rm -f junit_results.xml .coverage
-	rm -rf build dist coverage .mypy_cache .eggs
+	rm -rf build dist coverage .mypy_cache .eggs docs/_build
 
 bump:
 	# For an arbitrary or additive change.
