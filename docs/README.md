@@ -1,10 +1,4 @@
 # Schireson Logger
-\#schiresonip #teamruby
-
-## Index
-* [Why use logging](#why-use-logging)
-* [How to configure local logging](#local-logging)
-* [How to set up remote logging](#remote-logging)
 
 <a name='why-use-logging'></a>
 ### Why use logging
@@ -40,6 +34,7 @@ from schireson_logger import setup_logging
 setup_logging('INFO')
 ```
 
+
 Then modules that want to log things can import the logger and start logging:
 ```python
 from schireson_logger import log
@@ -61,4 +56,4 @@ $ docker run \
 
 If the project is deployed directly, a service such as CloudWatch can be used to collect logs and metrics. 
 Ask SRE if you don't have AWS permissions or need any help.
-The Amazon docs are here: [CloudWatch Logs Agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html)
+The Amazon docs are here: [Quick Start: CloudWatch Logs Agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html)

@@ -4,4 +4,26 @@
 #
 #    pip-compile --output-file deps/requirements.txt deps/requirements.in
 #
+alabaster==0.7.12         # via sphinx
+babel==2.6.0              # via sphinx
+certifi==2018.11.29       # via requests
+chardet==3.0.4            # via requests
+commonmark==0.8.1         # via recommonmark
+docutils==0.14            # via recommonmark, sphinx
+future==0.17.1            # via commonmark
+idna==2.8                 # via requests
+imagesize==1.1.0          # via sphinx
+jinja2==2.10              # via sphinx
 jsonschema==2.6.0
+markupsafe==1.1.0         # via jinja2
+packaging==18.0           # via sphinx
+pygments==2.3.1           # via sphinx
+pyparsing==2.3.0          # via packaging
+pytz==2018.9              # via babel
+recommonmark==0.5.0
+requests==2.21.0          # via sphinx
+six==1.11.0               # via packaging, sphinx
+snowballstemmer==1.2.1    # via sphinx
+sphinx==1.8.3
+sphinxcontrib-websupport==1.1.0  # via sphinx
+urllib3==1.24.1           # via requests

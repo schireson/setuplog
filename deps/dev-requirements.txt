@@ -4,43 +4,56 @@
 #
 #    pip-compile --output-file deps/dev-requirements.txt deps/dev-requirements.in deps/requirements.txt
 #
-attrs==18.2.0             # via pytest
+alabaster==0.7.12
+attrs==17.4.0             # via pytest
+babel==2.6.0
 bandit==1.4.0
 bumpversion==0.5.3
-certifi==2018.11.29       # via requests
-chardet==3.0.4            # via requests
+certifi==2018.11.29
+chardet==3.0.4
 click==7.0                # via flask
+commonmark==0.8.1
 coverage==4.5
+docutils==0.14
 flake8==3.5.0
 flask==0.12.2
+future==0.17.1
 gitdb2==2.0.5             # via gitpython
 gitpython==2.1.11         # via bandit
-idna==2.8                 # via requests
+idna==2.8
+imagesize==1.1.0
 isort==4.3.3
 itsdangerous==1.1.0       # via flask
-jinja2==2.10              # via flask
+jinja2==2.10
 jsonschema==2.6.0
-markupsafe==1.1.0         # via jinja2
+markupsafe==1.1.0
 mccabe==0.6.1             # via flake8
 mypy==0.570 ; python_version > "2.7"
+packaging==18.0
 pbr==5.1.1                # via stevedore
 pluggy==0.6.0             # via pytest
 py==1.7.0                 # via pytest
 pycodestyle==2.3.1        # via flake8
 pydocstyle==2.1.1
 pyflakes==1.6.0           # via flake8
+pygments==2.3.1
+pyparsing==2.3.0
 pytest-cov==2.5.1
 pytest-flask==0.10.0
 pytest==3.4.0
 python-dotenv==0.8.1
+pytz==2018.9
 pyyaml==3.13              # via bandit
-requests==2.21.0          # via responses
+recommonmark==0.5.0
+requests==2.21.0
 responses==0.10.5
-six==1.12.0               # via bandit, pydocstyle, pytest, responses, stevedore
+six==1.11.0
 smmap2==2.0.5             # via gitdb2
-snowballstemmer==1.2.1    # via pydocstyle
+snowballstemmer==1.2.1
+sphinx==1.8.3
+sphinxcontrib-websupport==1.1.0
 stevedore==1.30.0         # via bandit
 typed-ast==1.1.1          # via mypy
-urllib3==1.24.1           # via requests
+urllib3==1.24.1
 werkzeug==0.14.1          # via flask, pytest-flask
 wheel==0.30.0
