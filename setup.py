@@ -32,7 +32,9 @@ SETUP_REQUIREMENTS = [
 setup(
     name='schireson-logger',
     url='https://bitbucket.org/schireson/schireson-logger',
-    version='1.0.4',
+    author='Ashley Weaver',
+    author_email='ashley@schireson.com',
+    version='1.0.5',
     packages=find_packages(where='src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,
