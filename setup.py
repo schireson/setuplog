@@ -34,7 +34,7 @@ setup(
     url='https://bitbucket.org/schireson/schireson-logger',
     author='Ashley Weaver',
     author_email='ashley@schireson.com',
-    version='1.0.6',
+    version='1.0.7',
     packages=find_packages(where='src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,
