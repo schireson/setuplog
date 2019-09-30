@@ -49,11 +49,6 @@ logging_config = {
             'handlers': ['main'],
             'propagate': False,
         },
-        'logger': {
-            'level': 'DEBUG',
-            'handlers': ['main'],
-            'propagate': False,
-        },
     },
     'root': {
         'level': 'WARNING',
@@ -64,11 +59,14 @@ logging_config = {
 }
 
 
+_logging_namespace = None
+
+
 def setup_logging(
-        log_level,
+        log_level=logging.INFO,
         log_file=None,
         escape_unicode=False,
-        logger_name='logger',
+        namespace=None,
         log_format=None,
         date_format=None,
         log_level_overrides=None,
@@ -78,6 +76,9 @@ def setup_logging(
     The param log_level_overrides is a mapping of loggers to levels, to set levels for dependent packages,
     e.g. ``{'requests': 'INFO'}``
     """
+    global _logging_namespace
+    _logging_namespace = namespace
+
     logging_config['handlers']['main']['level'] = log_level
 
     if log_format:
@@ -93,6 +94,13 @@ def setup_logging(
                 'handlers': ['main'],
                 'propagate': False,
             }
+
+    if namespace:
+        logging_config['loggers'][namespace] = {
+            'level': log_level,
+            'handlers': ['main'],
+            'propagate': False,
+        }
 
     if escape_unicode:
         logging_config['handlers']['main']['formatter'] = 'escaped'
@@ -113,7 +121,7 @@ def setup_logging(
             )
         )
 
-        logging.getLogger(logger_name).addHandler(file_handler)
+        logging.getLogger().addHandler(file_handler)
         if log_level_overrides:
             for logger in log_level_overrides.keys():
                 logging.getLogger(logger).addHandler(file_handler)
@@ -129,8 +137,12 @@ def create_log_handler(name, log_level='DEBUG'):
 
 class _Logging(object):
     def __getattr__(self, attr):
+        prefix = ''
+        if _logging_namespace:
+            prefix = _logging_namespace + '.'
+
         # Ensure the logger name is pulled from 1 frame up rather than from the local frame.
-        logger = _cached_logger('logger.' + sys._getframe(1).f_globals['__name__'])
+        logger = _cached_logger(prefix + sys._getframe(1).f_globals['__name__'])
         return getattr(logger, attr)
 
 

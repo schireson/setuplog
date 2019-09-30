@@ -99,3 +99,24 @@ def test_decorator(capsys):
     assert 'WARNING' in console_out
     assert 'ERROR' in console_out
     assert 'Traceback' in console_out
+
+
+def test_no_namespace(capsys):
+    setup_logging()
+
+    from schireson_logger import log
+
+    log.info('woah!')
+
+    console_out, _ = capsys.readouterr()
+    assert ' - test_logger - INFO - woah!' in console_out
+
+def test_namespace(capsys):
+    setup_logging(namespace='foo')
+
+    from schireson_logger import log
+
+    log.info('woah!')
+
+    console_out, _ = capsys.readouterr()
+    assert ' - foo.test_logger - INFO - woah!' in console_out
