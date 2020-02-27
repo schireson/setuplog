@@ -2,13 +2,14 @@ import tempfile
 
 import pytest
 
-from schireson_logger import log_exceptions, setup_logging
+from setuplog.decorator import log_exceptions
+from setuplog.logger import setup_logging, M
 
 
 def log_levels(logger):
-    logger.info('')
-    logger.warning('')
-    logger.error('')
+    logger.info("")
+    logger.warning("")
+    logger.error("")
 
 
 def log_multiple_lines(logger):
@@ -22,101 +23,107 @@ def log_multiple_lines(logger):
 
 
 def test_setup_logging(capsys):
-    setup_logging('INFO')
+    setup_logging("INFO")
 
-    from schireson_logger import log
+    from setuplog import log
 
     log_levels(log)
     console_out, _ = capsys.readouterr()
-    assert 'INFO' in console_out
-    assert 'WARNING' in console_out
-    assert 'ERROR' in console_out
+    assert "INFO" in console_out
+    assert "WARNING" in console_out
+    assert "ERROR" in console_out
 
 
 def test_setup_logging_higher_level(capsys):
-    setup_logging('WARNING')
+    setup_logging("WARNING")
 
-    from schireson_logger import log
+    from setuplog import log
 
     log_levels(log)
     console_out, _ = capsys.readouterr()
-    assert 'INFO' not in console_out
-    assert 'WARNING' in console_out
-    assert 'ERROR' in console_out
+    assert "INFO" not in console_out
+    assert "WARNING" in console_out
+    assert "ERROR" in console_out
 
 
 def test_setup_logging_escape_unicode(capsys):
-    setup_logging('INFO')
+    setup_logging("INFO")
 
-    from schireson_logger import log
-
-    log_multiple_lines(log)
-    console_out, _ = capsys.readouterr()
-    assert '\n' in console_out
-    assert '\\n' not in console_out
-
-    setup_logging('INFO', escape_unicode=True)
+    from setuplog import log
 
     log_multiple_lines(log)
     console_out, _ = capsys.readouterr()
-    assert '\\n' in console_out
+    assert "\n" in console_out
+    assert "\\n" not in console_out
+
+    setup_logging("INFO", escape_unicode=True)
+
+    log_multiple_lines(log)
+    console_out, _ = capsys.readouterr()
+    assert "\\n" in console_out
 
 
 def test_setup_file_logging(capsys):
-    f = tempfile.NamedTemporaryFile(mode='r+')
-    setup_logging('INFO', log_file=f.name)
+    f = tempfile.NamedTemporaryFile(mode="r+")
+    setup_logging("INFO", log_file=f.name)
 
-    from schireson_logger import log
+    from setuplog import log
 
     log_levels(log)
 
     console_out, _ = capsys.readouterr()
-    assert 'INFO' in console_out
-    assert 'WARNING' in console_out
-    assert 'ERROR' in console_out
+    assert "INFO" in console_out
+    assert "WARNING" in console_out
+    assert "ERROR" in console_out
 
     file = f.read()
-    assert 'INFO' in file
-    assert 'WARNING' in file
-    assert 'ERROR' in file
-
-
-def test_decorator(capsys):
-    setup_logging('INFO')
-
-    from schireson_logger import log
-
-    @log_exceptions(log)
-    def divide_by_zero():
-        return 1 / 0
-
-    log_levels(log)
-    with pytest.raises(ZeroDivisionError):
-        divide_by_zero()
-
-    console_out, _ = capsys.readouterr()
-    assert 'INFO' in console_out
-    assert 'WARNING' in console_out
-    assert 'ERROR' in console_out
-    assert 'Traceback' in console_out
+    assert "INFO" in file
+    assert "WARNING" in file
+    assert "ERROR" in file
 
 
 def test_no_namespace(capsys):
     setup_logging()
 
-    from schireson_logger import log
+    from setuplog import log
 
-    log.info('woah!')
+    log.info("woah!")
 
     console_out, _ = capsys.readouterr()
-    assert ' - test_logger - INFO - woah!' in console_out
+    assert " - test_logger - INFO - woah!" in console_out
+
 
 def test_namespace(capsys):
-    setup_logging(namespace='foo')
+    setup_logging(namespace="foo")
 
-    from schireson_logger import log
+    from setuplog import log
 
-    log.info('woah!')
+    log.info("woah!")
 
     console_out, _ = capsys.readouterr()
-    assert ' - foo.test_logger - INFO - woah!' in console_out
+    assert " - foo.test_logger - INFO - woah!" in console_out
+
+
+def test_M(capsys):
+    setup_logging(namespace="foo")
+
+    from setuplog import log
+
+    log.info(M("{0} {woah}!", "hi", woah="there"))
+
+    console_out, _ = capsys.readouterr()
+    assert "hi there" in console_out
+
+
+def test_exception_formatting(capsys):
+    setup_logging(namespace="foo")
+
+    from setuplog import log
+
+    try:
+        raise Exception("wat")
+    except Exception:
+        log.info("msg", exc_info=True)
+
+    console_out, _ = capsys.readouterr()
+    assert "wat" in console_out
