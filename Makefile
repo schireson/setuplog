@@ -1,49 +1,28 @@
-.PHONY: init install-deps lint sync-deps build test clean
+.PHONY: install build test lint format publish
+.DEFAULT_GOAL := test
 
-init:
-	bin/pyenv-create-venv schireson-logger
-	PYVERSION=2.7.14 bin/pyenv-create-venv schireson-logger-py2
-
-set-py3:
-	echo schireson-logger > .python-version
-
-set-py2:
-	echo schireson-logger-py2 > .python-version
-
-install-deps:
-	pip install -e .[develop]
-
-lint:
-	bin/lint
-	bin/diffcheck
-
-sync-deps:
-	bin/sync-deps
+install:
+	poetry install
 
 build:
-	python setup.py sdist bdist_wheel
-
-publish:
-	lucha cicd publish pypi
+	poetry build
 
 test:
-	pytest -m "not functional"
+	coverage run -a -m py.test src tests -vv
+	coverage report
+	coverage xml
 
-clean:
-	rm -rf `find . -type d -name ".pytest_cache"`
-	rm -rf `find . -type d -name "*.eggs"`
-	rm -rf `find . -type d -name "*.egg-info"`
-	rm -rf `find . -type d -name "__pycache__"`
-	rm -rf `find . -type f -name "*.pyc"`
-	rm -rf `find . -type f -name "*.pyo"`
+lint:
+	flake8 src tests
+	isort --check-only --recursive src tests
+	pydocstyle src tests
+	black --check src tests
+	mypy src tests
+	bandit src
 
-	rm -f junit_results.xml .coverage
-	rm -rf build dist coverage .mypy_cache .eggs docs/_build
+format:
+	isort --recursive src tests
+	black src tests
 
-bump:
-	# For an arbitrary or additive change.
-	bumpversion patch
-
-bump-minor:
-	# For a backwards incompatible change.
-	bumpversion minor
+publish: build
+	poetry publish -u __token__ -p '${PYPI_PASSWORD}' --no-interaction
