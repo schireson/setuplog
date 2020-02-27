@@ -1,110 +1,127 @@
-######################################
-# Reusable steps should be added here.
-######################################
-authenticate-aws: &authenticate-aws
-  run:
-    name: Authenticate with a particular ECR instance on AWS
-    command: |
-      aws configure set default.region "${AWS_DEFAULT_REGION:-us-east-1}"
-      printf "${AWS_CREDENTIALS}" > ~/.aws/credentials
-install-dependencies: &install-dependencies
-  run:
-    name: Install Dependencies
-    command: |
-      cd "${LOCATION:-.}"
-      # pip installing virtualenv in Python 3 will be a no-op
-      pip install virtualenv
-      virtualenv .venv
-      . .venv/bin/activate
-      make install-deps
-lint: &lint
-  run:
-    name: Run Linters
-    command: |
-      cd "${LOCATION:-.}"
-      . .venv/bin/activate
-      make lint
-check-version-bump: &check-version-bump
-  run:
-    name: Check Python package version
-    command: |
-      cd "${LOCATION:-.}"
-      bin/diffcheck
-test: &test
-  run:
-    name: Run Tests
-    command: |
-      cd "${LOCATION:-.}"
-      . .venv/bin/activate
-      make test
-publish: &publish
-  run:
-    name: Publish Python distribution to Artifactory
-    command: |
-      sudo pip3 install twine
-      lucha aws whitelist --profile artifactory -- make -C "${LOCATION:-.}" publish
+version: 2.1
 
-###########
-# Workflows
-###########
-version: 2
+executors:
+  python36:
+    docker:
+      - image: circleci/python:3.6
+
+  python37:
+    docker:
+      - image: circleci/python:3.7
+
+  python38:
+    docker:
+      - image: circleci/python:3.8
+
+  publish:
+    docker:
+      - image: circleci/python:3.6
+
+commands:
+  setup:
+    steps:
+      - checkout
+      - run:
+          name: Execute prerequisite setup
+          command: |
+            curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+            echo 'export PATH="$HOME/.poetry/bin:$PATH"' >> $BASH_ENV
+
+  run-make:
+    parameters:
+      command:
+        type: string
+    steps:
+      - run:
+          name: Run a make command
+          command: |
+            poetry run make << parameters.command >>
+
+  setup-python:
+    description: Install python dependencies
+    steps:
+      - setup
+      - restore_cache:
+          key: v1-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+      - run-make:
+          command: install
+      - save_cache:
+          paths:
+            - /home/circleci/.cache/pypoetry/virtualenvs
+          key: v1-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+
+  persist-coverage:
+    steps:
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .coverage
+            - coverage.xml
+
+  publish:
+    steps:
+      - attach_workspace:
+          at: .
+      - run: bash <(curl -s https://codecov.io/bash)
+
+jobs:
+  test-python36:
+    executor: python36
+    steps:
+      - setup-python
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - attach_workspace:
+          at: .
+      - run-make:
+          command: test
+      - persist-coverage
+
+  test-python37:
+    executor: python37
+    steps:
+      - setup-python
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run-make:
+          command: test
+
+  test-python38:
+    executor: python38
+    steps:
+      - setup-python
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run-make:
+          command: test
+
+  lint:
+    executor: python36
+    steps:
+      - setup-python
+      - run-make:
+          command: lint
+
+  publish:
+    executor: publish
+    steps:
+      - setup-python
+      - publish
+
+
 workflows:
-  version: 2
-
   build_all:
     jobs:
-      - build
-      - build-py2
+      - test-python36
+      - test-python37
+      - test-python38
 
       - publish:
           requires:
-            - build
-            - build-py2
+            - test-python36
+            - test-python37
+            - test-python38
           filters:
             branches:
               only:
                 - /^master$/
-
-###################
-# Job Definitions
-###################
-jobs:
-  build:
-    docker:
-      - image: circleci/python:3.6.4
-    steps:
-      - checkout
-      - restore_cache:
-          key: dep-{{ checksum "deps/dev-requirements.txt" }}-{{ checksum "deps/requirements.txt" }}
-      - <<: *install-dependencies
-      - save_cache:
-          paths:
-            - .venv
-          key: dep-{{ checksum "deps/dev-requirements.txt" }}-{{ checksum "deps/requirements.txt" }}
-      - setup_remote_docker
-      - <<: *lint
-      - <<: *check-version-bump
-      - <<: *test
-
-  build-py2:
-    docker:
-      - image: circleci/python:2.7.14
-    steps:
-      - checkout
-      - restore_cache:
-          key: dep-{{ checksum "deps/dev-requirements-py2.txt" }}-{{ checksum "deps/requirements-py2.txt" }}
-      - <<: *install-dependencies
-      - save_cache:
-          paths:
-            - .venv
-          key: dep-{{ checksum "deps/dev-requirements-py2.txt" }}-{{ checksum "deps/requirements-py2.txt" }}
-      - setup_remote_docker
-      - <<: *test
-
-  publish:
-    docker:
-      - image: schireson/cicd-python
-    steps:
-      - checkout
-      - <<: *authenticate-aws
-      - <<: *publish
