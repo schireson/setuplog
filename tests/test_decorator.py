@@ -1,11 +1,11 @@
 import pytest
 
-from setuplog.decorator import log_exceptions
-from setuplog.logger import setup_logging
 from setuplog import log
+from setuplog.decorator import log_duration, log_exceptions
+from setuplog.logger import setup_logging
 
 
-def test_decorator(capsys):
+def test_log_exceptions(capsys):
     setup_logging("INFO")
 
     @log_exceptions(log)
@@ -24,3 +24,29 @@ def test_decorator(capsys):
     assert "ERROR" in console_out
     assert "Traceback" in console_out
 
+
+def test_log_duration_success(capsys):
+    setup_logging("INFO")
+
+    @log_duration("function")
+    def function():
+        print("wahoo")
+
+    function()
+
+    console_out, _ = capsys.readouterr()
+    assert "Completed: function" in console_out
+
+
+def test_log_duration_error(capsys):
+    setup_logging("INFO")
+
+    @log_duration("bad function")
+    def divide_by_zero():
+        return 1 / 0
+
+    with pytest.raises(ZeroDivisionError):
+        divide_by_zero()
+
+    console_out, _ = capsys.readouterr()
+    assert "Failed: bad function" in console_out

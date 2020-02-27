@@ -1,9 +1,6 @@
 import tempfile
 
-import pytest
-
-from setuplog.decorator import log_exceptions
-from setuplog.logger import setup_logging, M
+from setuplog.logger import log, M, setup_logging
 
 
 def log_levels(logger):
@@ -25,8 +22,6 @@ def log_multiple_lines(logger):
 def test_setup_logging(capsys):
     setup_logging("INFO")
 
-    from setuplog import log
-
     log_levels(log)
     console_out, _ = capsys.readouterr()
     assert "INFO" in console_out
@@ -37,8 +32,6 @@ def test_setup_logging(capsys):
 def test_setup_logging_higher_level(capsys):
     setup_logging("WARNING")
 
-    from setuplog import log
-
     log_levels(log)
     console_out, _ = capsys.readouterr()
     assert "INFO" not in console_out
@@ -48,8 +41,6 @@ def test_setup_logging_higher_level(capsys):
 
 def test_setup_logging_escape_unicode(capsys):
     setup_logging("INFO")
-
-    from setuplog import log
 
     log_multiple_lines(log)
     console_out, _ = capsys.readouterr()
@@ -67,8 +58,6 @@ def test_setup_file_logging(capsys):
     f = tempfile.NamedTemporaryFile(mode="r+")
     setup_logging("INFO", log_file=f.name)
 
-    from setuplog import log
-
     log_levels(log)
 
     console_out, _ = capsys.readouterr()
@@ -85,8 +74,6 @@ def test_setup_file_logging(capsys):
 def test_no_namespace(capsys):
     setup_logging()
 
-    from setuplog import log
-
     log.info("woah!")
 
     console_out, _ = capsys.readouterr()
@@ -95,8 +82,6 @@ def test_no_namespace(capsys):
 
 def test_namespace(capsys):
     setup_logging(namespace="foo")
-
-    from setuplog import log
 
     log.info("woah!")
 
@@ -107,8 +92,6 @@ def test_namespace(capsys):
 def test_M(capsys):
     setup_logging(namespace="foo")
 
-    from setuplog import log
-
     log.info(M("{0} {woah}!", "hi", woah="there"))
 
     console_out, _ = capsys.readouterr()
@@ -117,8 +100,6 @@ def test_M(capsys):
 
 def test_exception_formatting(capsys):
     setup_logging(namespace="foo")
-
-    from setuplog import log
 
     try:
         raise Exception("wat")

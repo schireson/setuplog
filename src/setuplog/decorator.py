@@ -1,7 +1,8 @@
+import contextlib
 import functools
 import time
+
 from setuplog.logger import log
-import contextlib
 
 
 def log_exceptions(logger):

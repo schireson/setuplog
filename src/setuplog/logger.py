@@ -1,10 +1,10 @@
 from __future__ import absolute_import
+
 import logging
 import logging.config
 import logging.handlers
 import sys
 from functools import lru_cache
-
 
 _DEFAULT_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 _DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
