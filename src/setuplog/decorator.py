@@ -5,26 +5,39 @@ import time
 from setuplog.logger import log
 
 
-def log_exceptions(logger):
+def log_exceptions(func):
     """Log exceptions in the decorated function and its nested calls.
+
+    Examples:
+        >>> @log_exceptions
+        ... def err():
+        ...     raise Exception("ack!")
     """
 
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception:
-                log.exception("")
-                raise
-
-        return wrapper
+    @functools.wraps(func)
+    def decorator(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            log.exception("")
+            raise
 
     return decorator
 
 
 @contextlib.contextmanager
-def log_duration(action):
+def log_duration(action: str):
+    """Log the duration of the callee.
+
+    Args:
+        action: A description of the action being performed by the callee.
+
+    Examples:
+        >>> import time
+        >>> @log_duration('sleeping')
+        ... def sleeping():
+        ...     time.sleep(.1)
+    """
     log.info("Started: %s", action)
     start_time = time.time()
 

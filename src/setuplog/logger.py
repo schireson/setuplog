@@ -1,3 +1,12 @@
+"""Automatically prepare a logger for the current module.
+
+>>> from setuplog import log
+>>>
+>>> log.debug('debug!')
+>>> log.info('info!')
+>>> log.warning('warning!')
+>>> log.error('error!')
+"""
 from __future__ import absolute_import
 
 import logging
