@@ -1,4 +1,4 @@
-from setuplog import log, setup_logging, M
+from setuplog import log, M, setup_logging
 
 
 def test_empty_format(capsys):

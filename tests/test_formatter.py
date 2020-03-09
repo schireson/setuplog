@@ -1,4 +1,5 @@
 import sys
+
 from setuplog.formatters import UnicodeEscapeFormatter
 
 
