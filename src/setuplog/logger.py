@@ -92,9 +92,6 @@ def generate_logging_config(
     }
 
 
-_logging_namespace = None
-
-
 def setup_logging(
     log_level=logging.INFO,
     escape_unicode=False,
@@ -109,8 +106,7 @@ def setup_logging(
     The param log_level_overrides is a mapping of loggers to levels, to set levels for dependent packages,
     e.g. ``{'requests': 'INFO'}``
     """
-    global _logging_namespace
-    _logging_namespace = namespace
+    logging.config.namespace = namespace
 
     if namespace:
         log_level_overrides.update({namespace: log_level})
@@ -142,8 +138,9 @@ def create_log_handler(name, log_level="DEBUG"):
 class _Logging(object):
     def __getattr__(self, attr):
         prefix = ""
-        if _logging_namespace:
-            prefix = _logging_namespace + "."
+        namespace = getattr(logging.config, "namespace", None)
+        if namespace:
+            prefix = logging.config.namespace + "."
 
         # Ensure the logger name is pulled from 1 frame up rather than from the local frame.
         logger = _cached_logger(prefix + sys._getframe(1).f_globals["__name__"])
