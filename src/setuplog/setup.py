@@ -73,18 +73,28 @@ def get_style_adaptor(style: str):
 
 def setup_logging(
     log_level=logging.INFO,
-    escape_unicode=False,
     namespace=None,
     log_format=_DEFAULT_FORMAT,
     date_format=_DEFAULT_DATE_FORMAT,
     log_level_overrides=_DEFAULT_LOG_LEVEL_OVERRIDES,
     log_file=None,
+    escape_unicode=False,
     style="percent",
 ):
     """Set up logging for a file or a project.
 
-    The param log_level_overrides is a mapping of loggers to levels, to set levels for dependent packages,
-    e.g. ``{'requests': 'INFO'}``
+    Args:
+        log_level: The minimum log level to listen for events
+        namespace: If specified, prepend setuplog.log-produced logs with this string.
+        log_format: Log format to apply to all logs.
+        date_format: Date format to apply to all logs.
+        log_level_overrides: A mapping of loggers to levels, which specifies the levels that should
+            applied to each package. `{'requests': 'INFO'}`
+        log_file: Adds a rotating file handler to the root logger at the given filename
+        escape_unicode: If set to `True`, escapes newline characters for use with a log aggregator;
+            a commonly used option in docker environments.
+        style: Valid options: "percent", "format". Defaults to percent for backwards compatibility.
+            A value of "format" opts into {}-style log formatting for logs produced by setuplog.
     """
     logging.config.namespace = namespace
 
