@@ -1,6 +1,6 @@
 import tempfile
 
-from setuplog.logger import log, M, setup_logging
+from setuplog import log, M, setup_logging
 
 
 def log_levels(logger):

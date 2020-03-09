@@ -1,8 +1,6 @@
 import pytest
 
-from setuplog import log
-from setuplog.decorator import log_duration, log_exceptions
-from setuplog.logger import setup_logging
+from setuplog import log, log_duration, log_exceptions, setup_logging
 
 
 def test_log_exceptions(capsys):
