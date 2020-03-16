@@ -60,7 +60,7 @@ def generate_logging_config(
         "disable_existing_loggers": False,
         "handlers": handlers,
         "loggers": loggers,
-        "root": {"level": "WARNING", "handlers": list(handlers.keys())},
+        "root": {"level": level, "handlers": list(handlers.keys())},
     }
 
 
