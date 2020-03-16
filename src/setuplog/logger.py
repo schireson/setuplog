@@ -15,11 +15,13 @@ import sys
 from functools import lru_cache
 
 
-def create_log_handler(name, log_level="DEBUG", style_adaptor=None):
+def create_log_handler(name, log_level=None, style_adaptor=None):
     """Create a logger.
     """
     log = logging.getLogger(name)
-    log.setLevel(log_level)
+
+    if log_level:
+        log.setLevel(log_level)
 
     if style_adaptor:
         log = style_adaptor(log)

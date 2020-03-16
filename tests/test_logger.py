@@ -1,6 +1,6 @@
 import tempfile
 
-from setuplog import log, M, setup_logging
+from setuplog import log, M, setup_logging, create_log_handler
 
 
 def log_levels(logger):
@@ -108,3 +108,24 @@ def test_exception_formatting(capsys):
 
     console_out, _ = capsys.readouterr()
     assert "wat" in console_out
+
+
+def test_log_handler_level(capsys):
+    setup_logging("DEBUG")
+
+    logger = create_log_handler("foo.bar.baz", log_level="WARNING")
+
+    logger.info("hi there")
+
+    console_out, _ = capsys.readouterr()
+    assert "" == console_out
+
+
+def test_log_handler_root_level(capsys):
+    setup_logging("DEBUG")
+
+    logger = create_log_handler("foo.bar.baz")
+    logger.info("hi there")
+
+    console_out, _ = capsys.readouterr()
+    assert "hi there" in console_out
