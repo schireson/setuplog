@@ -1,7 +1,9 @@
 import contextlib
 import functools
+import logging
 import time
 
+from setuplog.adaptors import M
 from setuplog.logger import log
 
 
@@ -18,7 +20,7 @@ def log_exceptions(func):
     def decorator(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception:
+        except Exception as e:
             log.exception("")
             raise
 
@@ -26,7 +28,7 @@ def log_exceptions(func):
 
 
 @contextlib.contextmanager
-def log_duration(action: str):
+def log_duration(action: str, level=logging.INFO):
     """Log the duration of the callee.
 
     Args:
@@ -38,7 +40,7 @@ def log_duration(action: str):
         ... def sleeping():
         ...     time.sleep(.1)
     """
-    log.info("Started: %s", action)
+    log.info(M("Started: {}", action))
     start_time = time.time()
 
     try:
@@ -47,10 +49,10 @@ def log_duration(action: str):
         end_time = time.time()
         duration = end_time - start_time
 
-        log.info("Failed: %s (in %.1f seconds)", action, duration)
+        log.info(M("Failed: {} (in {:.1f} seconds)", action, duration))
         raise
     else:
         end_time = time.time()
         duration = end_time - start_time
 
-    log.info("Completed: %s (in %.1f seconds)", action, duration)
+    log.info(M("Completed: {} (in {:.1f} seconds)", action, duration))

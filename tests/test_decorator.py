@@ -23,8 +23,9 @@ def test_log_exceptions(capsys):
     assert "Traceback" in console_out
 
 
-def test_log_duration_success(capsys):
-    setup_logging("INFO")
+@pytest.mark.parametrize("style", ("percent", "format"))
+def test_log_duration_success(capsys, style):
+    setup_logging("INFO", style=style)
 
     @log_duration("function")
     def function():
@@ -36,8 +37,9 @@ def test_log_duration_success(capsys):
     assert "Completed: function" in console_out
 
 
-def test_log_duration_error(capsys):
-    setup_logging("INFO")
+@pytest.mark.parametrize("style", ("percent", "format"))
+def test_log_duration_error(capsys, style):
+    setup_logging("INFO", style=style)
 
     @log_duration("bad function")
     def divide_by_zero():
