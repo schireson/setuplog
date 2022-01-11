@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "setuplog"
-version = "0.2.2"
+version = "0.2.3"
 description = ""
 authors = []
 license = "MIT"
@@ -12,6 +12,7 @@ packages = [
 readme = 'README.md'
 include = [
     "*.md",
+    "py.typed",
 ]
 
 [tool.poetry.dependencies]
