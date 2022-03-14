@@ -50,31 +50,31 @@ def get_logger() -> logging.Logger:
 
 
 class _Logging(object):
-    def debug(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+    def debug(self, msg: Union[object, str, M], *args: Any, **kwargs: Any) -> None:
         logger = get_logger()
         logger.debug(msg, *args, **kwargs)
 
-    def info(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+    def info(self, msg: Union[object, str, M], *args: Any, **kwargs: Any) -> None:
         logger = get_logger()
         logger.info(msg, *args, **kwargs)
 
-    def warning(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+    def warning(self, msg: Union[object, str, M], *args: Any, **kwargs: Any) -> None:
         logger = get_logger()
         logger.warning(msg, *args, **kwargs)
 
-    def error(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+    def error(self, msg: Union[object, str, M], *args: Any, **kwargs: Any) -> None:
         logger = get_logger()
         logger.error(msg, *args, **kwargs)
 
-    def exception(self, msg: Union[str, M], *args: Any, exc_info=True, **kwargs: Any) -> None:
+    def exception(self, msg: Union[object, str, M], *args: Any, exc_info=True, **kwargs: Any) -> None:
         logger = get_logger()
         logger.exception(msg, *args, exc_info=exc_info, **kwargs)
 
-    def critical(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+    def critical(self, msg: Union[object, str, M], *args: Any, **kwargs: Any) -> None:
         logger = get_logger()
         logger.critical(msg, *args, **kwargs)
 
-    def log(self, level: int, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+    def log(self, level: int, msg: Union[object, str, M], *args: Any, **kwargs: Any) -> None:
         logger = get_logger()
         logger.log(level, msg, *args, **kwargs)
 
