@@ -1,3 +1,5 @@
+import logging
+
 from setuplog import log, M, setup_logging
 
 
@@ -51,3 +53,12 @@ def test_object(capsys):
     log.info(Foo())
     console_out, _ = capsys.readouterr()
     assert " - INFO - Foo(1, 2, 3)" in console_out
+
+
+def test_level_filter(caplog):
+    caplog.set_level(logging.INFO)
+
+    setup_logging(style="format")
+
+    log.debug("asdf")
+    assert len(caplog.records) == 0

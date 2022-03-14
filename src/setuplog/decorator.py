@@ -20,7 +20,7 @@ def log_exceptions(func):
     def decorator(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception as e:
+        except Exception:
             log.exception("")
             raise
 

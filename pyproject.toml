@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "setuplog"
-version = "0.2.3"
+version = "0.3.0"
 description = ""
 authors = []
 license = "MIT"
@@ -22,6 +22,7 @@ python = ">=3.3, !=3.3.*, !=3.4.*, !=3.5.*, <4"
 bandit = "*"
 black = { version = "19.3b0", allow-prereleases = true, python = ">=3.6" }
 coverage = ">=5"
+mypy = ">=0.931"
 flake8 = "^3.7"
 isort = "^4.3"
 pydocstyle = "*"
@@ -42,6 +43,13 @@ multi_line_output = 3
 order_by_type = false
 known_first_party = 'tests'
 use_parentheses = true
+
+[tool.mypy]
+strict_optional = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+implicit_reexport = true
+incremental = true
 
 [build-system]
 requires = [ "poetry>=0.12" ]

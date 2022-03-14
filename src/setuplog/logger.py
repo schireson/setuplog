@@ -13,6 +13,9 @@ import logging
 import logging.config
 import sys
 from functools import lru_cache
+from typing import Any, Union
+
+from setuplog.adaptors import M
 
 
 def create_log_handler(name, log_level=None, style_adaptor=None):
@@ -29,22 +32,51 @@ def create_log_handler(name, log_level=None, style_adaptor=None):
     return log
 
 
+def get_logger() -> logging.Logger:
+    segments = []
+    namespace = getattr(logging.config, "namespace", "")
+    if namespace:
+        segments.append(namespace)
+
+    style_adaptor = getattr(logging.config, "style_adaptor", None)
+
+    # Ensure the logger name is pulled from 2 frames up rather than from the local frame. One frame for this function, and one for the
+    # `_Logging` function calls.
+    frame_name = sys._getframe(2).f_globals["__name__"]
+    segments.append(frame_name)
+
+    name = ".".join(segments)
+    return _cached_logger(name, style_adaptor=style_adaptor)
+
+
 class _Logging(object):
-    def __getattr__(self, attr):
-        segments = []
-        namespace = getattr(logging.config, "namespace", "")
-        if namespace:
-            segments.append(namespace)
+    def debug(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.debug(msg, *args, **kwargs)
 
-        style_adaptor = getattr(logging.config, "style_adaptor", None)
+    def info(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.info(msg, *args, **kwargs)
 
-        # Ensure the logger name is pulled from 1 frame up rather than from the local frame.
-        frame_name = sys._getframe(1).f_globals["__name__"]
-        segments.append(frame_name)
+    def warning(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.warning(msg, *args, **kwargs)
 
-        name = ".".join(segments)
-        logger = _cached_logger(name, style_adaptor=style_adaptor)
-        return getattr(logger, attr)
+    def error(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.error(msg, *args, **kwargs)
+
+    def exception(self, msg: Union[str, M], *args: Any, exc_info=True, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.exception(msg, *args, exc_info=exc_info, **kwargs)
+
+    def critical(self, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.critical(msg, *args, **kwargs)
+
+    def log(self, level: int, msg: Union[str, M], *args: Any, **kwargs: Any) -> None:
+        logger = get_logger()
+        logger.log(level, msg, *args, **kwargs)
 
 
 _cached_logger = lru_cache()(create_log_handler)

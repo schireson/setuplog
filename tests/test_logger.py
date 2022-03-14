@@ -1,12 +1,16 @@
+import logging
 import tempfile
 
-from setuplog import log, M, setup_logging, create_log_handler
+from setuplog import create_log_handler, log, M, setup_logging
 
 
 def log_levels(logger):
     logger.info("")
     logger.warning("")
     logger.error("")
+    logger.exception("")
+    logger.critical("")
+    logger.log(logging.INFO, "")
 
 
 def log_multiple_lines(logger):
