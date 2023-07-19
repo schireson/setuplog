@@ -58,3 +58,4 @@ shell.nix
 
 # Documentation
 docs/_*
+.python-version

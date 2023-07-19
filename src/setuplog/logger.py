@@ -40,8 +40,8 @@ def get_logger() -> logging.Logger:
 
     style_adaptor = getattr(logging.config, "style_adaptor", None)
 
-    # Ensure the logger name is pulled from 2 frames up rather than from the local frame. One frame for this function, and one for the
-    # `_Logging` function calls.
+    # Ensure the logger name is pulled from 2 frames up rather than from the local frame.
+    # One frame for this function, and one for the `_Logging` function calls.
     frame_name = sys._getframe(2).f_globals["__name__"]
     segments.append(frame_name)
 
@@ -66,7 +66,9 @@ class _Logging(object):
         logger = get_logger()
         logger.error(msg, *args, **kwargs)
 
-    def exception(self, msg: Union[object, str, M], *args: Any, exc_info=True, **kwargs: Any) -> None:
+    def exception(
+        self, msg: Union[object, str, M], *args: Any, exc_info=True, **kwargs: Any
+    ) -> None:
         logger = get_logger()
         logger.exception(msg, *args, exc_info=exc_info, **kwargs)
 
