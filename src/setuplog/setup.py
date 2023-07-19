@@ -10,7 +10,6 @@ from setuplog.formatters import UnicodeEscapeFormatter
 _DEFAULT_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 _DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 _DEFAULT_LOG_LEVEL_OVERRIDES = {"requests": "INFO"}
-_FILE_HANDLER_MAX_BYTES = 1048576
 
 
 def generate_loggers(*, log_level_overrides):
@@ -31,12 +30,12 @@ def generate_handlers(level, formatter, *, log_file=None):
     }
     if log_file:
         handlers["file_handler"] = {
-            "class": "logging.handlers.RotatingFileHandler",
+            "class": "logging.FileHandler",
             "formatter": formatter,
             "filename": log_file,
-            "maxBytes": _FILE_HANDLER_MAX_BYTES,
             "level": level,
         }
+
     return handlers
 
 

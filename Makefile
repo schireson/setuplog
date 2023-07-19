@@ -13,12 +13,12 @@ test:
 	coverage xml
 
 lint:
-	flake8 src tests
-	isort --check-only --recursive src tests
-	pydocstyle src tests
-	black --check src tests
-	mypy src tests
-	bandit src
+	flake8 --max-line-length=120 src tests || exit 1
+	isort --check-only --recursive src tests || exit 1
+	pydocstyle src tests || exit 1
+	black --check src tests || exit 1
+	mypy src tests || exit 1
+	bandit src || exit 1
 
 format:
 	isort --recursive src tests

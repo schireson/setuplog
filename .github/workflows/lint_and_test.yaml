@@ -1,0 +1,52 @@
+name: Lint And Test
+on:
+  pull_request:
+  merge_group:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
+  schedule:
+    - cron: '0 0 */3 * *'
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        id: setup-python
+        with:
+          python-version: '3.9.16'
+        env:
+          PYTHON_CONFIGURE_OPTS: --enable-shared --enable-optimizations
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Load cached venv
+        if: ${{ github.event.action }} != "schedule"
+        uses: actions/cache@v3
+        with:
+          path: ${{ inputs.working-directory }}/.venv
+          key: venv-${{ runner.os }}-ubuntu-latest-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Lint
+        run: |
+          source .venv/bin/activate
+          make lint
+
+      - name: Test
+        run: |
+          source .venv/bin/activate
+          make test
